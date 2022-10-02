@@ -1,3 +1,10 @@
+:root {
+    --ZERO: #ffffe8;
+    --ONE: #8cffda;
+    --TWO: #8447ff;
+    --THREE: #ffb2e6;
+    --FOUR: #d972ff;
+}
 :not(i) {
     font-family: Helvetica;
 }
@@ -15,7 +22,8 @@ body {
     justify-content: center
 }
 .left {
-    width: calc(50% - 200px);
+    margin-left: 10px;
+    width: calc(50% - 210px);
 }
 .right {
     width: calc(50% - 200px);
@@ -26,4 +34,44 @@ body {
 }
 .segment {
     height: 100%;
+}
+p {
+    margin: 3px;
+    margin-top: 15px;
+    display: inline-block;
+    font-size: 30px;
+}
+.line {
+    height: 100px;
+    width: 400px;
+    margin-bottom: 10px;
+    background-color: #FFFFFF24;
+    display: flex;
+}
+.block {
+    height: 100px;
+    width: 100px;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+}
+.block.zero {
+    background-color: var(--ZERO);
+}
+.block.one {
+    background-color: var(--ONE);
+}
+.block.two {
+    background-color: var(--TWO);
+}
+.block.3 {
+    background-color: var(--THREE);
+}
+.block.4 {
+    background-color: var(--FOUR);
 }
