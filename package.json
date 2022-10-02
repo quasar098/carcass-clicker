@@ -1,0 +1,26 @@
+{
+  "name": "carcass-clicker",
+  "version": "1.0.0",
+  "description": "woohoo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quasar098/carcass-clicker.git"
+  },
+  "keywords": [
+    "rhythm",
+    "game"
+  ],
+  "author": "quasar098",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quasar098/carcass-clicker/issues"
+  },
+  "homepage": "https://github.com/quasar098/carcass-clicker#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
