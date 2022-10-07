@@ -3,9 +3,10 @@ let scoreElm = document.getElementById('score');
 let scorePerSecondElm = document.getElementById('sps');
 let linesClearedElm = document.getElementById('lines');
 
-let score = 0;
+let score = (localStorage.getItem("ccScore") ?? 0) * 1;
+let offset = 0;
 let lastSecondScore = 0;
-let linesCleared = 0;
+let linesCleared = (localStorage.getItem("ccLines") ?? 0) * 1;
 
 let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn)
 
@@ -22,7 +23,6 @@ function makeLineDiv(line_array) {
         let block = document.createElement("div");
         block.classList.add("block");
         block.classList.add(numWordMap[line_array[index]] ?? 'four');
-        block.innerText = line_array[index];
         line.appendChild(block);
     }
     return line;
@@ -57,6 +57,7 @@ function attemptRemoveLine() {
         nextLines = nextLines.splice(1);
         nextLines.push(newLineArray());
     }
+    offset += 100;
 }
 
 document.addEventListener("keydown", (e) => {
@@ -82,6 +83,23 @@ document.addEventListener("keydown", (e) => {
     }, 1000);
     attemptRemoveLine();
     updateLines();
+    updateOffset();
 })
+
+function updateOffset() {
+    linesDiv.style.transform = 'translateY(' + offset + 'px)'
+}
+
+setInterval(() => {
+    if (offset > 0) {
+        offset -= 10;
+    }
+    if (offset > 200) {
+        offset -= 10;
+    }
+    updateOffset();
+    localStorage.setItem("ccScore", score);
+    localStorage.setItem("ccLines", linesCleared);
+}, 10);
 
 updateLines();
