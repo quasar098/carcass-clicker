@@ -13,7 +13,11 @@ let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn)
 let fm_lastActiveSlot = 0;
 
 let currentLine = newLineArray();
-let nextLines = [newLineArray(), newLineArray(), newLineArray(), newLineArray(), newLineArray(), newLineArray(), newLineArray()];
+let nextLines = [];
+
+for (var i = 0; i < 25; i++) {
+    nextLines.push(newLineArray());
+}
 
 function makeLineDiv(line_array) {
     let numWordMap = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four'}
@@ -92,10 +96,10 @@ function updateOffset() {
 
 setInterval(() => {
     if (offset > 0) {
-        offset -= 10;
+        offset -= (offset/40)**2+5;
     }
-    if (offset > 200) {
-        offset -= 10;
+    if (offset < 0) {
+        offset = 0;
     }
     updateOffset();
     localStorage.setItem("ccScore", score);
