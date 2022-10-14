@@ -2,9 +2,19 @@ let linesDiv = document.getElementById("gameplay");
 let scoreElm = document.getElementById('score');
 let scorePerSecondElm = document.getElementById('sps');
 let linesClearedElm = document.getElementById('lines');
+let comboElm = document.getElementById('combo');
+let bonusPointsElm = document.getElementById('bonusPoints');
+let bonusTileChanceButton = document.getElementById('upgradeBonusTileChance');
+let bonusTileChanceElm = document.getElementById('bonusTileChance');
 
 let score = (localStorage.getItem("ccScore") ?? 0) * 1;
+let combo = 0;
 let offset = 0;
+
+let bonusPoints = 0;
+let bonusTileChance = 1;
+let bonusTileUpgradeCost = 250;
+
 let lastSecondScore = 0;
 let linesCleared = (localStorage.getItem("ccLines") ?? 0) * 1;
 
@@ -41,6 +51,10 @@ function updateLines() {
     linesClearedElm.innerText = linesCleared;
     scoreElm.innerText = score;
     scorePerSecondElm.innerText = lastSecondScore;
+    comboElm.innerText = combo;
+    bonusPointsElm.innerText = bonusPoints;
+    bonusTileChanceElm.innerText = bonusTileChance;
+    bonusTileChanceButton.innerText = `Upgrade (${bonusTileUpgradeCost})`;
 }
 
 function newLineArray() {
@@ -49,7 +63,7 @@ function newLineArray() {
     while (chosenSlot == fm_lastActiveSlot) {
         chosenSlot = Math.floor(Math.random()*4);
     }
-    arr[chosenSlot] = 1;
+    arr[chosenSlot] = Math.random() > 1-(bonusTileChance/100) ? 2 : 1;
     fm_lastActiveSlot = chosenSlot;
     return arr;
 }
@@ -60,8 +74,8 @@ function attemptRemoveLine() {
         currentLine = nextLines[0];
         nextLines = nextLines.splice(1);
         nextLines.push(newLineArray());
+        offset += 100;
     }
-    offset += 100;
 }
 
 document.addEventListener("keydown", (e) => {
@@ -69,17 +83,22 @@ document.addEventListener("keydown", (e) => {
     let slot = keyMap[e.keyCode];
     if (slot == undefined) { return; }
     if (currentLine[slot] == 0) {
-        score -= 1;
+        score -= 1+Math.floor(combo/5);
         lastSecondScore -= 1;
         setTimeout(() => {
             lastSecondScore+=1;
             scorePerSecondElm.innerText = lastSecondScore;
         }, 1000);
+        combo = 0;
         updateLines();
         return;
     }
-    score+=1;
-    currentLine[slot]+=-1;
+    score+=1+Math.floor(combo/20);
+    combo+=1;
+    if (currentLine[slot] == 2) {
+        bonusPoints += 1;
+    }
+    currentLine[slot]=0;
     lastSecondScore+=1;
     setTimeout(() => {
         lastSecondScore-=1;
@@ -90,14 +109,21 @@ document.addEventListener("keydown", (e) => {
     updateOffset();
 })
 
+bonusTileChanceButton.addEventListener("click", (e) => {
+    if (score > bonusTileUpgradeCost) {
+        score -= bonusTileUpgradeCost;
+        bonusTileChance += 1;
+        bonusTileUpgradeCost = Math.floor(bonusTileUpgradeCost*1.5)
+    }
+    updateLines();
+})
+
 function updateOffset() {
     linesDiv.style.transform = 'translateY(' + offset + 'px)'
 }
 
 setInterval(() => {
-    if (offset > 0) {
-        offset -= (offset/40)**2+5;
-    }
+    offset = (offset / 1.04)-3;
     if (offset < 0) {
         offset = 0;
     }

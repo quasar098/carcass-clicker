@@ -27,11 +27,13 @@ body {
     width: calc(50% - 210px);
 }
 .right {
-    width: calc(50% - 200px);
+    margin-left: 10px;
+    width: calc(50% - 210px);
+
 }
 .gameplay {
     width: 400px;
-    box-shadow: 0px -10px 0px #dddded, 0px -100px 0px var(--ZERO);
+    box-shadow: 0px -10px 0px #dddded, 0px -600px 0px var(--ZERO);
     background-color: #DDDDED;
 }
 .segment {

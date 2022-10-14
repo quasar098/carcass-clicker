@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Carcass Clicker</title>
-        <link rel="stylesheet" href="/style.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <div class="left segment">
@@ -12,11 +12,19 @@
             <p>Score per second: <p id="sps">0</p></p>
             <br>
             <p>Lines cleared: <p id="lines">0</p></p>
+            <br>
+            <p>Combo: <p id="combo">0</p></p>
         </div>
         <div class="gameplay segment" id="gameplay">
         </div>
         <div class="right segment">
-            
+            <p>Bonus points: <p id="bonusPoints">0</p></p>
+            <br>
+            <button type="button" name="button" id="upgradeBonusTileChance">Upgrade (250)</button>
+            <p>Bonus tile chance: <p id="bonusTileChance">1</p>%</p>
+            <br>
+            <button type="button" name="button" id="updatePointsPerLine">Upgrade (500)</button>
+            <p>Points per line: <p id="pointsPerLine">0</p></p>
         </div>
         <script src="script.js" charset="utf-8"></script>
     </body>
