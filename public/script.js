@@ -6,17 +6,26 @@ let comboElm = document.getElementById('combo');
 let bonusPointsElm = document.getElementById('bonusPoints');
 let bonusTileChanceButton = document.getElementById('upgradeBonusTileChance');
 let bonusTileChanceElm = document.getElementById('bonusTileChance');
+let pointsPerLineButton = document.getElementById('upgradePointsPerLine');
+let pointsPerLineElm = document.getElementById('pointsPerLine');
 
-let score = (localStorage.getItem("ccScore") ?? 0) * 1;
-let combo = 0;
+function gset(val, norm) {
+    return (localStorage.getItem(val) ?? (norm ?? 0)) * 1;
+}
+
+let score = gset("ccScore")
+let combo = gset("ccCombo")
 let offset = 0;
 
-let bonusPoints = 0;
-let bonusTileChance = 1;
-let bonusTileUpgradeCost = 250;
+let pointsPerLine = gset("ccPointsPerLine", 1);
+let pointsPerLineUpgradeCost = gset("ccPointsPerLineUpgradeCost", 10)
+
+let bonusPoints = gset("ccBonus");
+let bonusTileChance = gset("ccTileChance", 1);
+let bonusTileChanceUpgradeCost = gset("ccTileChanceCost", 250);
 
 let lastSecondScore = 0;
-let linesCleared = (localStorage.getItem("ccLines") ?? 0) * 1;
+let linesCleared = gset("ccLines");
 
 let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn)
 
@@ -54,7 +63,9 @@ function updateLines() {
     comboElm.innerText = combo;
     bonusPointsElm.innerText = bonusPoints;
     bonusTileChanceElm.innerText = bonusTileChance;
-    bonusTileChanceButton.innerText = `Upgrade (${bonusTileUpgradeCost})`;
+    bonusTileChanceButton.innerText = `Upgrade (${bonusTileChanceUpgradeCost} score)`;
+    pointsPerLineElm.innerText = pointsPerLine;
+    pointsPerLineButton.innerText = `Upgrade (${pointsPerLineUpgradeCost} bonus points)`;
 }
 
 function newLineArray() {
@@ -83,7 +94,7 @@ document.addEventListener("keydown", (e) => {
     let slot = keyMap[e.keyCode];
     if (slot == undefined) { return; }
     if (currentLine[slot] == 0) {
-        score -= 1+Math.floor(combo/5);
+        score -= pointsPerLine+Math.floor(combo/5);
         lastSecondScore -= 1;
         setTimeout(() => {
             lastSecondScore+=1;
@@ -93,7 +104,7 @@ document.addEventListener("keydown", (e) => {
         updateLines();
         return;
     }
-    score+=1+Math.floor(combo/20);
+    score+=pointsPerLine+Math.floor(combo/20);
     combo+=1;
     if (currentLine[slot] == 2) {
         bonusPoints += 1;
@@ -110,10 +121,18 @@ document.addEventListener("keydown", (e) => {
 })
 
 bonusTileChanceButton.addEventListener("click", (e) => {
-    if (score > bonusTileUpgradeCost) {
-        score -= bonusTileUpgradeCost;
+    if (score >= bonusTileChanceUpgradeCost) {
+        score -= bonusTileChanceUpgradeCost;
         bonusTileChance += 1;
-        bonusTileUpgradeCost = Math.floor(bonusTileUpgradeCost*1.5)
+        bonusTileChanceUpgradeCost = Math.floor(bonusTileChanceUpgradeCost*1.5)
+    }
+    updateLines();
+})
+pointsPerLineButton.addEventListener("click", (e) => {
+    if (bonusPoints >= pointsPerLineUpgradeCost) {
+        bonusPoints -= pointsPerLineUpgradeCost;
+        pointsPerLine += 1;
+        pointsPerLineUpgradeCost = Math.floor(pointsPerLineUpgradeCost*1.2)
     }
     updateLines();
 })
@@ -130,6 +149,12 @@ setInterval(() => {
     updateOffset();
     localStorage.setItem("ccScore", score);
     localStorage.setItem("ccLines", linesCleared);
+    localStorage.setItem("ccBonus", bonusPoints);
+    localStorage.setItem("ccTileChance", bonusTileChance);
+    localStorage.setItem("ccTileChanceCost", bonusTileChanceUpgradeCost);
+    localStorage.setItem("ccCombo", combo);
+    localStorage.setItem("ccPointsPerLine", pointsPerLine);
+    localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
 }, 10);
 
 updateLines();
