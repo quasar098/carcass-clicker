@@ -141,12 +141,28 @@ function updateOffset() {
     linesDiv.style.transform = 'translateY(' + offset + 'px)'
 }
 
+function resetStats() {
+    if (confirm("are you sure?")) {
+        localStorage.removeItem("ccScore");
+        localStorage.removeItem("ccLines");
+        localStorage.removeItem("ccBonus");
+        localStorage.removeItem("ccTileChance")
+        localStorage.removeItem("ccTileChanceCost")
+        localStorage.removeItem("ccCombo")
+        localStorage.removeItem("ccPointsPerLine")
+        localStorage.removeItem("ccPointsPerLineUpgradeCost");
+        window.location.reload();
+    }
+}
+
 setInterval(() => {
     offset = (offset / 1.09)-3;
     if (offset < 0) {
         offset = 0;
     }
     updateOffset();
+}, 10);
+setInterval(() => {
     localStorage.setItem("ccScore", score);
     localStorage.setItem("ccLines", linesCleared);
     localStorage.setItem("ccBonus", bonusPoints);
@@ -155,6 +171,6 @@ setInterval(() => {
     localStorage.setItem("ccCombo", combo);
     localStorage.setItem("ccPointsPerLine", pointsPerLine);
     localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
-}, 10);
+}, 4000)
 
 updateLines();
