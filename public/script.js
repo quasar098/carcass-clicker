@@ -142,7 +142,7 @@ function updateOffset() {
 }
 
 setInterval(() => {
-    offset = (offset / 1.04)-3;
+    offset = (offset / 1.09)-3;
     if (offset < 0) {
         offset = 0;
     }
