@@ -8,6 +8,9 @@ let bonusTileChanceButton = document.getElementById('upgradeBonusTileChance');
 let bonusTileChanceElm = document.getElementById('bonusTileChance');
 let pointsPerLineButton = document.getElementById('upgradePointsPerLine');
 let pointsPerLineElm = document.getElementById('pointsPerLine');
+let scrollSpeedElm = document.getElementById('scrollSpeed');
+let prestigeAmountElm = document.getElementById('prestigeAmount');
+let prestigeAmountButton = document.getElementById('prestigeAmountButton');
 
 function gset(val, norm) {
     return (localStorage.getItem(val) ?? (norm ?? 0)) * 1;
@@ -26,6 +29,8 @@ let bonusTileChanceUpgradeCost = gset("ccTileChanceCost", 250);
 
 let lastSecondScore = 0;
 let linesCleared = gset("ccLines");
+
+let prestigeAmount = gset("ccPrestigeAmount", 0);
 
 let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn)
 
@@ -66,6 +71,8 @@ function updateLines() {
     bonusTileChanceButton.innerText = `Upgrade (${bonusTileChanceUpgradeCost} score)`;
     pointsPerLineElm.innerText = pointsPerLine;
     pointsPerLineButton.innerText = `Upgrade (${pointsPerLineUpgradeCost} bonus points)`;
+    prestigeAmountElm.innerText = prestigeAmount;
+    prestigeAmountButton.innerText = `Prestige (${(2**prestigeAmount)*10000} score)`;
 }
 
 function newLineArray() {
@@ -93,26 +100,27 @@ document.addEventListener("keydown", (e) => {
     let keyMap = {68: 0, 70: 1, 74: 2, 75: 3};
     let slot = keyMap[e.keyCode];
     if (slot == undefined) { return; }
+    let scoreMod = (pointsPerLine+Math.floor(combo/8))*(2**prestigeAmount);
     if (currentLine[slot] == 0) {
-        score -= pointsPerLine+Math.floor(combo/5);
-        lastSecondScore -= 1;
+        score -= scoreMod;
+        lastSecondScore -= scoreMod;
         setTimeout(() => {
-            lastSecondScore+=1;
+            lastSecondScore += scoreMod;
             scorePerSecondElm.innerText = lastSecondScore;
         }, 1000);
         combo = 0;
         updateLines();
         return;
     }
-    score+=pointsPerLine+Math.floor(combo/20);
+    score+=scoreMod;
     combo+=1;
     if (currentLine[slot] == 2) {
         bonusPoints += 1;
     }
     currentLine[slot]=0;
-    lastSecondScore+=1;
+    lastSecondScore+=scoreMod;
     setTimeout(() => {
-        lastSecondScore-=1;
+        lastSecondScore -= scoreMod;
         scorePerSecondElm.innerText = lastSecondScore;
     }, 1000);
     attemptRemoveLine();
@@ -141,7 +149,10 @@ function updateOffset() {
     linesDiv.style.transform = 'translateY(' + offset + 'px)'
 }
 
+let decidingToReset = false;
+
 function resetStats() {
+    decidingToReset = true;
     if (confirm("are you sure?")) {
         localStorage.removeItem("ccScore");
         localStorage.removeItem("ccLines");
@@ -151,18 +162,47 @@ function resetStats() {
         localStorage.removeItem("ccCombo")
         localStorage.removeItem("ccPointsPerLine")
         localStorage.removeItem("ccPointsPerLineUpgradeCost");
+        localStorage.removeItem("ccPrestigeAmount");
         window.location.reload();
     }
 }
 
 setInterval(() => {
-    offset = (offset / 1.09)-3;
+    offset = (offset / (((scrollSpeedElm.value*1)/10)+1))-3;
     if (offset < 0) {
         offset = 0;
     }
     updateOffset();
+    if (score < 0) {
+        score = 0;
+    }
 }, 10);
 setInterval(() => {
+    saveGame();
+}, 400)
+
+function prestige() {
+    if ((2**prestigeAmount)*10000 > score) {
+        return;
+    }
+    saveGame();
+    localStorage.removeItem("ccScore");
+    localStorage.removeItem("ccLines");
+    localStorage.removeItem("ccBonus");
+    localStorage.removeItem("ccTileChance")
+    localStorage.removeItem("ccTileChanceCost")
+    localStorage.removeItem("ccCombo")
+    localStorage.removeItem("ccPointsPerLine")
+    localStorage.removeItem("ccPointsPerLineUpgradeCost");
+    prestigeAmount += 1;
+    localStorage.setItem("ccPrestigeAmount", prestigeAmount)
+    window.location.reload();
+}
+
+function saveGame() {
+    if (decidingToReset) {
+        return
+    }
     localStorage.setItem("ccScore", score);
     localStorage.setItem("ccLines", linesCleared);
     localStorage.setItem("ccBonus", bonusPoints);
@@ -171,6 +211,7 @@ setInterval(() => {
     localStorage.setItem("ccCombo", combo);
     localStorage.setItem("ccPointsPerLine", pointsPerLine);
     localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
-}, 4000)
+    localStorage.setItem("ccPrestigeAmount", prestigeAmount)
+}
 
 updateLines();
