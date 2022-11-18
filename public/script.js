@@ -182,21 +182,32 @@ setInterval(() => {
 }, 400)
 
 function prestige() {
+    decidingToReset = true;
     if ((2**prestigeAmount)*10000 > score) {
         return;
     }
     saveGame();
-    localStorage.removeItem("ccScore");
-    localStorage.removeItem("ccLines");
-    localStorage.removeItem("ccBonus");
-    localStorage.removeItem("ccTileChance")
-    localStorage.removeItem("ccTileChanceCost")
-    localStorage.removeItem("ccCombo")
-    localStorage.removeItem("ccPointsPerLine")
-    localStorage.removeItem("ccPointsPerLineUpgradeCost");
-    prestigeAmount += 1;
-    localStorage.setItem("ccPrestigeAmount", prestigeAmount)
-    window.location.reload();
+    setTimeout(() => {
+        score = 0
+        linesCleared = 0
+        bonusPoints = 0
+        bonusTileChance = 0
+        bonusTileChanceUpgradeCost = 0
+        combo = 0
+        pointsPerLine = 0
+        pointsPerLineUpgradeCost = 0
+        localStorage.removeItem("ccScore");
+        localStorage.removeItem("ccLines");
+        localStorage.removeItem("ccBonus");
+        localStorage.removeItem("ccTileChance")
+        localStorage.removeItem("ccTileChanceCost")
+        localStorage.removeItem("ccCombo")
+        localStorage.removeItem("ccPointsPerLine")
+        localStorage.removeItem("ccPointsPerLineUpgradeCost");
+        prestigeAmount += 1;
+        localStorage.setItem("ccPrestigeAmount", prestigeAmount)
+        window.location.reload();
+    }, 200)
 }
 
 function saveGame() {
