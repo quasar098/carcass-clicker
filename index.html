@@ -2,14 +2,18 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>Carcass Clicker</title>
+        <title>Carcass Clicker II</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="/global.css">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
     </head>
     <body>
         <div class="left segment">
-            <p>Use DFJK keys to play</p>
+            <p>[~ z edit ~]</p>
+            <p>(original by quasar)</p>
             <br>
             <p>Score: <p id="score">0</p></p>
+            <br>
             <br>
             <p>Score per second: <p id="sps">0</p></p>
             <br>
@@ -28,7 +32,7 @@
             <p>Bonus points: <p id="bonusPoints">0</p></p>
             <br>
             <button type="button" name="button" id="upgradeBonusTileChance">Upgrade (~ score)</button>
-            <p>Bonus tile chance: <p id="bonusTileChance">1</p></p>
+            <p>Bonus tile chance: <p id="bonusTileChance">1</p><p>%</p></p>
             <br>
             <button type="button" name="button" id="upgradePointsPerLine">Upgrade (~ bonus points)</button>
             <p>Points per line: <p id="pointsPerLine">0</p></p>
@@ -36,7 +40,24 @@
             <button type="button" name="button" id="prestigeAmountButton" onclick="prestige()">Prestige (~ score)</button>
             <br>
             <button type="button" name="button" onclick="resetStats()">Reset Stats</button>
+            <br>
+            <input type="checkbox" name="autobuy" class="autobuy" id="autobuy">
+            <p class="autobuytitle">Autobuy</p>
         </div>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="#" onclick="colorUpdate(['#879aa7','#ececec','#61f58d','#ceda68','#e9a43d','#c22e2e', '#2f3136','#36393f', '#9597A0','#B5B7C0','#ffffff','#181818'])">Dark</a>
+            <a href="#" onclick="colorUpdate(['#9da6aa','#424242','#315329','#4f5329','#534229','#602a2a', '#eeeeee','#36393f', '#9597A0','#B5B7C0','#000000','#181818'])">Light</a>
+            <a href="#" onclick="colorUpdate(['#b3eeef','#0734d6','#072591','#09087b','#341198','#543994', '#3888df','#36393f', '#9ec4ee','#9eb4ee','#dcfeff','#181818'])">Sapphire</a>
+            <a href="#">Ruby</a>
+            <a href="#">Emerald</a>
+            <a href="#">Citrine</a>
+            <a href="#" onclick="colorUpdate(['#516427','#122435','#a8c6ed','#1c88d4','#444856','#ae8c64', '#019467','#a84ddf', '#f4f4f4','#8549ce','#dcfeff','#abcdef'])">keyspam #1</a>
+            <a href="#" onclick="colorUpdate(['#ae33f3','#9f5a91','#55f8be','#6dd487','#34f474','#658bdc', '#ff7932','#ff7932', '#2df7d0','#96c921','#dcfeff','#5e3340'])">keyspam #2</a>
+          </div>
+          <button type="button" name="button" onclick="openNav()">Themes</button>
+            ...
+          </div>
         <script src="script.js" charset="utf-8"></script>
     </body>
 </html>

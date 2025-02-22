@@ -11,6 +11,7 @@ let pointsPerLineElm = document.getElementById('pointsPerLine');
 let scrollSpeedElm = document.getElementById('scrollSpeed');
 let prestigeAmountElm = document.getElementById('prestigeAmount');
 let prestigeAmountButton = document.getElementById('prestigeAmountButton');
+let autobuyElm = document.getElementById('autobuy')
 
 function gset(val, norm) {
     return (localStorage.getItem(val) ?? (norm ?? 0)) * 1;
@@ -32,7 +33,7 @@ let linesCleared = gset("ccLines");
 
 let prestigeAmount = gset("ccPrestigeAmount", 0);
 
-let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn)
+let mode = "fm";  // fast mode (fm), hammers (hm), binary (bn) TODO DO THIS
 
 let fm_lastActiveSlot = 0;
 
@@ -44,7 +45,7 @@ for (var i = 0; i < 25; i++) {
 }
 
 function makeLineDiv(line_array) {
-    let numWordMap = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four'}
+    let numWordMap = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five'}
     let line = document.createElement("div");
     line.classList.add("line");
     for (let index in line_array) {
@@ -81,7 +82,7 @@ function newLineArray() {
     while (chosenSlot == fm_lastActiveSlot) {
         chosenSlot = Math.floor(Math.random()*4);
     }
-    arr[chosenSlot] = Math.random() > 1-(bonusTileChance/100) ? 2 : 1;
+    arr[chosenSlot] = Math.floor(Math.random()+(bonusTileChance/100))+1;
     fm_lastActiveSlot = chosenSlot;
     return arr;
 }
@@ -97,7 +98,7 @@ function attemptRemoveLine() {
 }
 
 document.addEventListener("keydown", (e) => {
-    let keyMap = {68: 0, 70: 1, 74: 2, 75: 3};
+    let keyMap = {68: 0, 70: 1, 74: 2, 75: 3, 79: 0, 80: 1, 219: 2, 221: 3};
     let slot = keyMap[e.keyCode];
     if (slot == undefined) { return; }
     let scoreMod = (pointsPerLine+Math.floor(combo/8))*(2**prestigeAmount);
@@ -113,9 +114,10 @@ document.addEventListener("keydown", (e) => {
         return;
     }
     score+=scoreMod;
+    //document.documentElement.style.cssText = "--ONE: red";
     combo+=1;
-    if (currentLine[slot] == 2) {
-        bonusPoints += 1;
+    if (currentLine[slot] >= 2) {
+        bonusPoints += currentLine[slot]-1;
     }
     currentLine[slot]=0;
     lastSecondScore+=scoreMod;
@@ -127,23 +129,24 @@ document.addEventListener("keydown", (e) => {
     updateLines();
     updateOffset();
 })
-
-bonusTileChanceButton.addEventListener("click", (e) => {
+let buyBTL = () => {
     if (score >= bonusTileChanceUpgradeCost) {
         score -= bonusTileChanceUpgradeCost;
         bonusTileChance += 1;
         bonusTileChanceUpgradeCost = Math.floor(bonusTileChanceUpgradeCost*1.5)
     }
     updateLines();
-})
-pointsPerLineButton.addEventListener("click", (e) => {
+}
+bonusTileChanceButton.addEventListener("click", buyBTL)
+let buyPPL = () => {
     if (bonusPoints >= pointsPerLineUpgradeCost) {
         bonusPoints -= pointsPerLineUpgradeCost;
         pointsPerLine += 1;
         pointsPerLineUpgradeCost = Math.floor(pointsPerLineUpgradeCost*1.2)
     }
     updateLines();
-})
+}
+pointsPerLineButton.addEventListener("click", buyPPL)
 
 function updateOffset() {
     linesDiv.style.transform = 'translateY(' + offset + 'px)'
@@ -153,7 +156,7 @@ let decidingToReset = false;
 
 function resetStats() {
     decidingToReset = true;
-    if (confirm("are you sure?")) {
+    if (confirm("...are you sure? This will delete ALL progress!")) {
         localStorage.removeItem("ccScore");
         localStorage.removeItem("ccLines");
         localStorage.removeItem("ccBonus");
@@ -175,6 +178,11 @@ setInterval(() => {
     updateOffset();
     if (score < 0) {
         score = 0;
+    }
+    if (autobuyElm.checked) {
+        buyBTL();
+        buyPPL();
+        prestige();
     }
 }, 10);
 setInterval(() => {
@@ -223,6 +231,27 @@ function saveGame() {
     localStorage.setItem("ccPointsPerLine", pointsPerLine);
     localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
     localStorage.setItem("ccPrestigeAmount", prestigeAmount)
+}
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
+function colorUpdate(_colorlist){
+    document.documentElement.style.setProperty("--ZERO", _colorlist[0]);
+    document.documentElement.style.setProperty("--ONE", _colorlist[1]);
+    document.documentElement.style.setProperty("--TWO", _colorlist[2]);
+    document.documentElement.style.setProperty("--THREE", _colorlist[3]);
+    document.documentElement.style.setProperty("--FOUR", _colorlist[4]);
+    document.documentElement.style.setProperty("--FIVE", _colorlist[5]);
+    document.documentElement.style.setProperty("--BG", _colorlist[6]);
+    document.documentElement.style.setProperty("--BETWEEN", _colorlist[6]);
+    document.documentElement.style.setProperty("--BUTTONTOP", _colorlist[8]);
+    document.documentElement.style.setProperty("--BUTTONBOT", _colorlist[9]);
+    document.documentElement.style.setProperty("--TEXT", _colorlist[10]);
+    document.documentElement.style.setProperty("--NAVMENU", _colorlist[11]);
 }
 
 updateLines();
