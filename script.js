@@ -307,5 +307,5 @@ function saveGame() {
     localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
     localStorage.setItem("ccPrestigeAmount", prestigeAmount)
 }
-
+tooglekeybinds("none")
 updateLines();

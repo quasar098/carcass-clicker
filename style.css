@@ -154,7 +154,7 @@ button {
   
   /* When you mouse over the navigation links, change their color */
   .sidenav a:hover {
-    color: #f1f1f1;
+    color: #e7c6e3;
   }
   
   /* Position and style the close button (top right corner) */
@@ -171,4 +171,10 @@ button {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
   }
+
+a:visited {
+    color: rgb(255, 255, 255);
+    background-color: transparent;
+    text-decoration: none;
+}
   
