@@ -47,7 +47,7 @@ const setKeybindsButton = document.getElementById('set-keybinds');
 const elements = document.querySelectorAll(".tobehiddenonkeybind");
 
 let settingKeybinds = false;
-let keybinds = ['KeyD', 'KeyF', 'KeyJ', 'KeyK']; // Default keybinds
+let keybinds = JSON.parse(localStorage.getItem("ccKeybinds")) || ['KeyD', 'KeyF', 'KeyJ', 'KeyK']; // Default keybinds
 
 function updateKeybindInputs() {
     keybindInputs.forEach((input, index) => {
@@ -66,10 +66,22 @@ setKeybindsButton.addEventListener('click', () => {
                 const index = Array.from(keybindInputs).indexOf(input);
                 keybinds[index] = newKey;
                 updateKeybindInputs();
+                localStorage.setItem("ccKeybinds", JSON.stringify(keybinds));
             });
         });
     }else{ tooglekeybinds("none") }
 });
+function loadKeybinds() {
+    let savedKeybinds = gset("ccKeybinds")
+    if (savedKeybinds) {
+        try {
+            keybinds = JSON.parse(savedKeybinds);
+        } catch (e) {
+            console.error("i fucked up the keybinds :3", e);
+        }
+    }
+}
+loadKeybinds(); // Apply saved keybinds before page loading
 updateKeybindInputs(); // Initialize the input fields with default values
 
 document.addEventListener('keydown', (e) => {
