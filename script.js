@@ -40,7 +40,57 @@ let fm_lastActiveSlot = 0;
 let currentLine = newLineArray();
 let nextLines = [];
 
-for (var i = 0; i < 25; i++) {
+//keybinding junk
+const keybindSettings = document.getElementById('keybind-settings');
+const keybindInputs = document.querySelectorAll('#keybind-settings input');
+const setKeybindsButton = document.getElementById('set-keybinds');
+const elements = document.querySelectorAll(".tobehiddenonkeybind");
+
+let settingKeybinds = false;
+let keybinds = ['KeyD', 'KeyF', 'KeyJ', 'KeyK']; // Default keybinds
+
+function updateKeybindInputs() {
+    keybindInputs.forEach((input, index) => {
+        input.value = keybinds[index];
+    });
+}
+setKeybindsButton.addEventListener('click', () => {
+    settingKeybinds =!settingKeybinds;
+    setKeybindsButton.textContent = settingKeybinds? 'Save Keybinds': 'Set Keybinds';
+
+    if (settingKeybinds) {
+        tooglekeybinds("block")
+        keybindInputs.forEach((input) => {
+            input.addEventListener('keydown', (event) => {
+                const newKey = event.code;
+                const index = Array.from(keybindInputs).indexOf(input);
+                keybinds[index] = newKey;
+                updateKeybindInputs();
+            });
+        });
+    }else{ tooglekeybinds("none") }
+});
+updateKeybindInputs(); // Initialize the input fields with default values
+
+document.addEventListener('keydown', (e) => {
+    let slot;
+    if (keybinds === e.code) {
+        slot = 0;
+    } else if (keybinds === e.code) {
+        slot = 1;
+    } else if (keybinds === e.code) {
+        slot = 2;
+    } else if (keybinds === e.code) {
+        slot = 3;
+    } else {
+        return;
+    }
+});
+
+//I misspelled it and now it's staying like that
+function tooglekeybinds(state) { for (let i = 0; i < elements.length; i++) { elements[i].style.display = state;}}
+
+for (var i = 0; i < 12; i++) {
     nextLines.push(newLineArray());
 }
 
@@ -98,9 +148,12 @@ function attemptRemoveLine() {
 }
 
 document.addEventListener("keydown", (e) => {
-    let keyMap = {68: 0, 70: 1, 74: 2, 75: 3, 79: 0, 80: 1, 219: 2, 221: 3};
-    let slot = keyMap[e.keyCode];
-    if (slot == undefined) { return; }
+    let keyMap = {};
+    for (let i = 0; i < keybinds.length; i++) {
+        keyMap[keybinds[i]] = i;
+    }
+    let slot = keyMap[e.code];
+    if ((slot == undefined) || (settingKeybinds)) { return; }
     let scoreMod = (pointsPerLine+Math.floor(combo/8))*(2**prestigeAmount);
     if (currentLine[slot] == 0) {
         score -= scoreMod;
@@ -114,7 +167,6 @@ document.addEventListener("keydown", (e) => {
         return;
     }
     score+=scoreMod;
-    //document.documentElement.style.cssText = "--ONE: red";
     combo+=1;
     if (currentLine[slot] >= 2) {
         bonusPoints += currentLine[slot]-1;
@@ -218,20 +270,8 @@ function prestige() {
     }, 200)
 }
 
-function saveGame() {
-    if (decidingToReset) {
-        return
-    }
-    localStorage.setItem("ccScore", score);
-    localStorage.setItem("ccLines", linesCleared);
-    localStorage.setItem("ccBonus", bonusPoints);
-    localStorage.setItem("ccTileChance", bonusTileChance);
-    localStorage.setItem("ccTileChanceCost", bonusTileChanceUpgradeCost);
-    localStorage.setItem("ccCombo", combo);
-    localStorage.setItem("ccPointsPerLine", pointsPerLine);
-    localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
-    localStorage.setItem("ccPrestigeAmount", prestigeAmount)
-}
+//sidepanel junk
+
 function openNav() {
     document.getElementById("mySidenav").style.width = "250px";
 }
@@ -252,6 +292,20 @@ function colorUpdate(_colorlist){
     document.documentElement.style.setProperty("--BUTTONBOT", _colorlist[9]);
     document.documentElement.style.setProperty("--TEXT", _colorlist[10]);
     document.documentElement.style.setProperty("--NAVMENU", _colorlist[11]);
+}
+function saveGame() {
+    if (decidingToReset) {
+        return
+    }
+    localStorage.setItem("ccScore", score);
+    localStorage.setItem("ccLines", linesCleared);
+    localStorage.setItem("ccBonus", bonusPoints);
+    localStorage.setItem("ccTileChance", bonusTileChance);
+    localStorage.setItem("ccTileChanceCost", bonusTileChanceUpgradeCost);
+    localStorage.setItem("ccCombo", combo);
+    localStorage.setItem("ccPointsPerLine", pointsPerLine);
+    localStorage.setItem("ccPointsPerLineUpgradeCost", pointsPerLineUpgradeCost)
+    localStorage.setItem("ccPrestigeAmount", prestigeAmount)
 }
 
 updateLines();
