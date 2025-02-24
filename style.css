@@ -1,18 +1,40 @@
 :root {
-    --ZERO: #ffffe8;
-    --ONE: #8cffda;
-    --TWO: #8447ff;
-    --THREE: #ffb2e6;
-    --FOUR: #d972ff;
+    --ZERO: #879aa7;
+    --ONE: #ececec;
+    --TWO: #61f58d;
+    --THREE: #ceda68;
+    --FOUR: #e9a43d;
+    --FIVE: #c22e2e;
+    --BG: #2f3136;
+    --BETWEEN: #36393f;
+    --BUTTONTOP: #9597A0;
+    --BUTTONBOT: #B5B7C0;
+    --TEXT: #ffffff;
+    --NAVMENU: #181818;
 }
 :not(i) {
     font-family: Helvetica;
+}
+button {
+    border: 0px;
+    border-radius: 0px;
+    background: linear-gradient(to bottom, var(--BUTTONTOP), var(--BUTTONBOT));
+}
+button:hover {
+    background: linear-gradient(to top, var(--BUTTONTOP), var(--BUTTONBOT));
+}
+.autobuy {
+    transform: translateY(20px);
 }
 html {
     height: 100%;
     width: 100%;
 }
+p {
+    color: var(--TEXT)
+}
 body {
+    background-color: var(--BG);
     overflow: hidden;
     height: 100%;
     width: 100%;
@@ -21,6 +43,14 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center
+}
+input[type="checkbox"] {
+    height: 50px;
+    width: 50px;
+    margin-top: 0px;
+}
+p.autobuytitle {
+    margin-top: 20px;
 }
 .left {
     margin-left: 10px;
@@ -33,8 +63,12 @@ body {
 }
 .gameplay {
     width: 400px;
-    box-shadow: 0px -10px 0px #dddded, 0px -600px 0px var(--ZERO);
-    background-color: #DDDDED;
+    box-shadow: 0px 0px 2rem rgba(0, 0, 0, 0.1), 0px -10px 0px var(--BETWEEN), 0px -600px 0px var(--ZERO);
+    background-color: var(--BETWEEN);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 .segment {
     height: 100%;
@@ -52,7 +86,7 @@ p {
     height: 100px;
     width: 400px;
     margin-bottom: 10px;
-    background-color: #FFFFFF24;
+    background-color: #ffffff34;
     display: flex;
 }
 .block {
@@ -67,6 +101,12 @@ p {
     align-items: center;
     font-size: 48px;
 }
+#score,#sps,#combo,#prestigeAmount,#lines {
+    font-family: Helvetica;
+}
+#bonusTileChance,#pointsPerLine,#bonusPoints {
+    margin-left: 10px;
+}
 button {
     height: 48px;
     margin-top: 10px;
@@ -80,9 +120,61 @@ button {
 .block.two {
     background-color: var(--TWO);
 }
-.block.3 {
+.block.three {
     background-color: var(--THREE);
 }
-.block.4 {
+.block.four {
     background-color: var(--FOUR);
 }
+.block.five {
+    background-color: var(--FIVE);
+}
+.sidenav {
+    height: 100%; 
+    width: 0; 
+    position: fixed; 
+    z-index: 1; 
+    top: 0; 
+    right: 0;
+    background-color: var(--NAVMENU); 
+    overflow-x: hidden; 
+    padding-top: 60px; 
+    transition: 0.5s; /
+  }
+  
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+  
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: #e7c6e3;
+  }
+  
+  /* Position and style the close button (top right corner) */
+  .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    left: 0px;
+    font-size: 36px;
+    margin-right: 50px;
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+
+a:visited {
+    color: rgb(255, 255, 255);
+    background-color: transparent;
+    text-decoration: none;
+}
+  
